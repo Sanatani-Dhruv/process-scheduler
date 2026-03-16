@@ -1,0 +1,19 @@
+{
+  "name": "process-scheduler",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "php -S localhost:8000",
+    "dev": "npx @tailwindcss/cli -i ./resources/tailwind.css -o ./build/output.css --watch",
+    "build": "npx @tailwindcss/cli -i ./resources/tailwind.css -o ./build/output.css --minify"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.2.1",
+    "tailwindcss": "^4.2.1"
+  }
+}
