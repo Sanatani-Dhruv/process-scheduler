@@ -8,9 +8,10 @@
   "main": "script.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "all": " npx concurrently --names='SERVER,DEV' 'php -S localhost:8000' 'npm run dev' --prefix-colors='red,blue'",
     "serve": "php -S localhost:8000",
-    "dev": "npx @tailwindcss/cli -i ./resources/tailwind.css -o ./build/output.css --watch",
-    "build": "npx @tailwindcss/cli -i ./resources/tailwind.css -o ./build/output.css --minify"
+    "dev": "tailwindcss -i ./resources/tailwind.css -o ./build/output.css --watch",
+    "build": "tailwindcss -i ./resources/tailwind.css -o ./build/output.css --minify"
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.2.1",
