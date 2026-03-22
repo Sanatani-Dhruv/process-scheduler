@@ -71,12 +71,18 @@ class process {
 	static async runProcess() {
 		process.running = true;
 		let i=0;
-		while (process.running) {
+		do {
 			process.running = await process.runProcessInstance()
-				.then(() => {console.log('Complete');return true})
-				.catch(() => false);
-			console.log('Process Ran')
-		}
+				.then(() => {
+					console.log('Process Running!!');
+					return true;
+				})
+				.catch(() => {
+					console.log('Processes Completed!!');
+					return false;
+				});
+
+		} while (process.running);
 	}
 
 	static runProcessInstance() {
