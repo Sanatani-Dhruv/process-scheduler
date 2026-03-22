@@ -2,11 +2,14 @@
 let runBtn = document.getElementById('runBtn');
 let nameInput = document.getElementById('nameInput');
 let addBtn = document.getElementById('addProcessBtn');
-let durationInput = document.getElementById('durationInput');
+let burstTimeInput = document.getElementById('burstTimeInput');
 let notes = document.getElementById('notifications');
 let processAddBlock = document.getElementById('processAddBlock');
-let remainingTimeBox = document.getElementById('remainingTimeBox');
-let passTimeBox = document.getElementById('passTimeBox');
+let remainingTimeBox_1 = document.getElementById('remainingTimeBox-1');
+let remainingTimeBox_2 = document.getElementById('remainingTimeBox-2');
+let passedTimeBox_1 = document.getElementById('passedTimeBox-1');
+let passedTimeBox_2 = document.getElementById('passedTimeBox-2');
+let burstTimeBox = document.getElementById('burstTimeBox');
 let colorArr = ['blue', 'red', 'green', 'pink', 'orange'];
 let currColor = 0;
 let processBlock = document.getElementById('processBlock');
@@ -19,35 +22,39 @@ class process {
 	static running  = false;
 	static processArray = [];
 	static processCount = 0;
-	constructor(processName, duration = 5) {
+	constructor(processName, burstTime = 5) {
 		this.processName = processName;
 		this.id = ++process.processCount;
-		this.duration = duration;
+		this.burstTime = burstTime;
 		console.log(`New Process Created with ID: ${this.id}`);
-		// console.log(`Name: ${this.processName}, ID: ${this.id}, Duration: ${this.duration}sec`);
+		// console.log(`Name: ${this.processName}, ID: ${this.id}, burstTime: ${this.burstTime}sec`);
 		this.arrivalTime = process.currentTime;
 		this.burstTime;
-		this.calcArrivalTime();
 		process.processArray.push(this);
 		console.log(process.processArray);
 	}
 
+	static sortOnBurstTime() {
+
+	}
+
 	static addProcess() {
-		if (nameInput.value.trim() != '' && durationInput.value.trim() != '') {
+		if (nameInput.value.trim() != '' && burstTimeInput.value.trim() != '') {
 			let name = nameInput.value;
-			let duration = +durationInput.value;
-			if (duration < 1) {
-				notification('Duration Should be Greater than 1', 'red');
+			let burstTime = +burstTimeInput.value;
+			if (burstTime < 1) {
+				notification('burstTime Should be Greater than 1', 'red');
 				return false;
 			}
-			let newProcess = new process(name, duration);
+			let newProcess = new process(name, burstTime);
 			nameInput.value = '';
-			durationInput.value = '';
-			process.remainingTime += duration;
-			remainingTimeBox.innerHTML = `${process.remainingTime}`
-			console.log(`Process Name: ${name}, Duration: ${duration}`);
+			burstTimeInput.value = '';
+			process.remainingTime += burstTime;
+			remainingTimeBox_1.innerHTML = `${process.remainingTime}`
+			remainingTimeBox_2.innerHTML = remainingTimeBox_1.innerHTML;
+			console.log(`Process Name: ${name}, Burst Time: ${burstTime}`);
 			console.log(`Number of Process: ${process.processCount}`);
-			let noteContent = `New Process Created with Name: ${name}<br>Duration: ${duration}`;
+			let noteContent = `New Process Created with Name: ${name}<br>burstTime: ${burstTime}`;
 			process.addProcessBlock(name);
 
 			// Creating Notification
@@ -59,19 +66,51 @@ class process {
 	}
 
 	static addProcessBlock(name) {
-		let processNode = document.createElement('div');
-		let processClass = `shadow-xl hover:scale-110 transition-all text-xl p-10 rounded font-medium w-10 h-40 flex justify-center items-center text-white bg-${colorArr[currColor++]}-600`;
+		// Parent
+		let node = document.createElement('div');
+
+		// Children
+		let nodeChildMain = document.createElement('div');
+		let nodeChildSub = document.createElement('div');
+
+		// Child-1 && Child-2 of Sub-Parent-2
+		let nodeChildSub1 = document.createElement('div');
+		let nodeChildSub2 = document.createElement('div');
+
+		// Setting Class Names
+		nodeChildMain.className = `text-lg mb-2`;
+		nodeChildSub.className = `text-sm w-max flex flex-col`;
+		nodeChildSub1.className = `w-max`;
+		nodeChildSub2.className = `w-max`;
+
+		node.appendChild(nodeChildMain);
+		node.appendChild(nodeChildSub);
+		nodeChildSub.appendChild(nodeChildSub1);
+		nodeChildSub.appendChild(nodeChildSub2);
+
+		let btSpan = document.createElement('span');
+		let atSpan = document.createElement('span');
+		let btValue = document.createElement('span');
+		let atValue = document.createElement('span');
+		let btId = document.createAttribute('id');
+		let atId = document.createAttribute('id');
+
+		// ID Setting Remaining Note For You
+		btSpan.innerText = "BT:";
+		atSpan.innerText = "AT:";
+
+		nodeChildSub1.appendChild(btSpan);
+		nodeChildSub1.appendChild(atSpan);
+
+		nodeChildMain.innerHTML = name;
+
+		let processClass = `shadow-xl hover:scale-110 transition-all text-lg p-10 rounded font-medium w-22 h-40 flex flex-col justify-center items-center text-white bg-${colorArr[currColor++]}-600`;
 		if (currColor == 5)
 			currColor = 0;
-		processNode.className = processClass;
-		processNode.innerHTML = name;
+		node.className = processClass;
+		// node.innerHTML = name;
 		console.log('Process Block:');
-		processBlock.appendChild(processNode);
-	}
-
-	calcArrivalTime() {
-		(!this.arrivalTime) ?? arrivalTime++;
-		let arrivalTime = console.log(`Arrival Time of ${this.id}: ${process.totalTime}s`);
+		processBlock.appendChild(node);
 	}
 
 	static handleStoppedRunning() {
@@ -120,8 +159,10 @@ class process {
 					console.log(process.processArray);
 					process.remainingTime--;
 					process.currentTime++;
-					passTimeBox.innerHTML = ++process.totalTime;
-					remainingTimeBox.innerHTML = `${+process.remainingTime}`;
+					passedTimeBox_1.innerHTML = ++process.totalTime;
+					passedTimeBox_2.innerHTML = passedTimeBox_1.innerHTML;
+					remainingTimeBox_2.innerHTML = `${+process.remainingTime}`;
+					remainingTimeBox_1.innerHTML = `${+process.remainingTime}`;
 					resolve();
 				} else {
 					process.remainingTime = 0;
@@ -133,7 +174,8 @@ class process {
 }
 
 // Setting Default remaining Time in remainingTimeBlock;
-remainingTimeBox.innerHTML = process.remainingTime;
+remainingTimeBox_1.innerHTML = process.remainingTime;
+remainingTimeBox_2.innerHTML = process.remainingTime;
 
 function notification(content, color = 'green', textcolor = 'white') {
 	let newNote = document.createElement('div');

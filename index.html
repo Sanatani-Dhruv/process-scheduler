@@ -11,17 +11,27 @@
 				<h1 class="text-5xl font-medium">Process Scheduler</h1>
 			</div>
 			<div class="border p-4 z-50 bg-white rounded">
-				<div id="processBlock" class="flex gap-4"></div>
-				<div class="pt-4 text-center">Current Remaining Time of Process: <span class="font-medium"><span id="remainingTimeBox">0</span>s</span></div>
+				<div id="processBlock" class="flex gap-4">
+					<div class="shadow-xl hover:scale-110 transition-all text-lg p-10 rounded font-medium w-22 h-40 flex flex-col justify-center items-center text-white bg-green-600">
+						<div class="text-lg mb-2">
+							P1
+						</div>
+						<div class="text-sm w-max flex flex-col">
+							<div class="w-max">
+								<span>BT:</span> <span id="bt-1">0</span>s
+							</div>
+							<div class="w-max">
+								<span>AT:</span> <span id="at-1">0</span>s
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="pt-4 text-center">Current Remaining Time of Process: <span class="font-medium"><span id="remainingTimeBox-2">0</span>s</span></div>
 			</div>
-			<div class="bg-orange-600 p-6 pt-4 rounded fixed left-8 top-8 h-1/4 min-h-max text-white shadow-xl text-lg">
-				<h1 class="text-3xl font-medium pb-2">Process Queue</h1>
-				<ul class="list-disc pl-4">
-					<li>Process 1</li>
-					<li>Process 4</li>
-					<li>Process 2</li>
-					<li>Process 5</li>
-				</ul>
+			<div class="bg-violet-700 p-6 pt-4 rounded fixed left-8 top-8 h-1/4 min-h-max text-white shadow-xl text-lg">
+				<h1 class="text-3xl font-medium pb-2">Statistics</h1>
+				<div class="font-medium">Passed Time: <span class="font-bold"><span id="remainingTimeBox-1">0</span>s</span></div>
+				<div class="font-medium">Remaining Time: <span class="font-bold"><span id="passedTimeBox-1">0</span>s</span></div>
 			</div>
 			<div class="bg-green-600 p-6 pt-4 rounded fixed right-8 top-8 h-1/4 min-h-max text-white shadow-xl text-lg">
 				<h1 class="text-3xl font-medium pb-2">Gantt Chart</h1>
@@ -38,13 +48,13 @@
 					</label>
 					<label class="w-min flex flex-col">
 						<span>Enter Process Duration</span>
-						<input id="durationInput" placeholder="Enter new process duration" class="p-1 border rounded" max="300" type="number" value="12">
+						<input id="burstTimeInput" placeholder="Enter new Duration" class="p-1 border rounded" max="300" type="number" value="12">
 					</label>
 				</div>
 				<button class="bg-blue-400 p-1 pl-3 pr-3 mt-2 rounded text-white cursor-pointer font-bold hover:scale-101 hover:bg-blue-600 transition-all" id="addProcessBtn">Add</button>
 			</div>
 			<div class="fixed right-15 bottom-10">
-				<div>Time Passed: <span class="font-medium"><span id='passTimeBox'>0</span>s</span></div>
+				<div>Time Passed: <span class="font-medium"><span id='passedTimeBox-2'>0</span>s</span></div>
 				<button id="runBtn" class="bg-blue-400 p-1 pl-3 pr-3 mt-2 rounded text-white cursor-pointer font-bold hover:scale-105 hover:bg-blue-600 transition-all">Run Processes</button>
 			</div>
 			<div id="notifications" class="transition-all fixed left-0 bottom-0 p-6 flex flex-col gap-4"></div>
