@@ -5,14 +5,14 @@
 		<title>Process Scheduler</title>
 		<link rel="stylesheet" href="./build/output.css">
 	</head>
-	<body>
+	<body class="transition-all">
 		<main class="flex justify-center items-center flex-col p-8">
 			<div class="pb-10">
 				<h1 class="text-5xl font-medium">Process Scheduler</h1>
 			</div>
 			<div class="border p-4">
 				<div id="processBlock" class="flex gap-4"></div>
-				<div class="pt-4 text-center">Current Remaining Time of Process: <span id="remainingTimeBox"></span></div>
+				<div class="pt-4 text-center">Current Remaining Time of Process: <span id="remainingTimeBox">0</span>s</div>
 			</div>
 			<div class="bg-orange-600 p-6 pt-4 rounded fixed left-8 top-8 h-1/4 min-h-max text-white shadow-xl text-lg">
 				<h1 class="text-3xl font-medium pb-2">Process Queue</h1>
@@ -41,12 +41,12 @@
 						<input id="durationInput" placeholder="Enter new process duration" class="p-1 border rounded" max="300" type="number" value="12">
 					</label>
 				</div>
-				<button class="bg-blue-400 p-1 pl-3 pr-3 mt-2 rounded text-white cursor-pointer font-bold hover:scale-105 hover:bg-blue-600 transition-all" id="addProcessBtn">Add</button>
+				<button class="bg-blue-400 p-1 pl-3 pr-3 mt-2 rounded text-white cursor-pointer font-bold hover:scale-101 hover:bg-blue-600 transition-all" id="addProcessBtn">Add</button>
 			</div>
 			<div class="fixed right-10 bottom-10">
 				<button id="runBtn" class="bg-blue-400 p-1 pl-3 pr-3 mt-2 rounded text-white cursor-pointer font-bold hover:scale-105 hover:bg-blue-600 transition-all">Run Processes</button>
 			</div>
-			<div id="notifications" class="fixed left-0 bottom-0 p-6 flex flex-col gap-4"></div>
+			<div id="notifications" class="transition-all fixed left-0 bottom-0 p-6 flex flex-col gap-4"></div>
 		</main>
 		<script src="./script.js"></script>
 	</body>

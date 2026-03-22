@@ -33,15 +33,15 @@ class process {
 	static addProcess() {
 		if (nameInput.value.trim() != '' && durationInput.value.trim() != '') {
 			let name = nameInput.value;
-			let duration = durationInput.value;
+			let duration = +durationInput.value;
 			let newProcess = new process(name, duration);
 			nameInput.value = '';
 			durationInput.value = '';
-			process.remainingTime += +duration;
-			remainingTimeBox.innerHTML = `${process.remainingTime}s`
+			process.remainingTime += duration;
+			remainingTimeBox.innerHTML = `${process.remainingTime}`
 			console.log(`Process Name: ${name}, Duration: ${duration}`);
 			console.log(`Number of Process: ${process.processCount}`);
-			let noteContent = `New Process Created with Name: ${name}<br>Duration: ${duration}s`;
+			let noteContent = `New Process Created with Name: ${name}<br>Duration: ${duration}`;
 			process.addProcessBlock(name);
 
 			// Creating Notification
@@ -89,8 +89,10 @@ class process {
 		return new Promise((resolve, reject) => {
 			if (process.remainingTime > 0) {
 				process.remainingTime--;
+				process.totalTime++;
+				process.currentTime++;
 				setTimeout(() => {
-					remainingTimeBox.innerHTML = `${+process.remainingTime}s`;
+					remainingTimeBox.innerHTML = `${+process.remainingTime}`;
 					resolve();
 				}, 1000);
 			} else {
@@ -100,11 +102,12 @@ class process {
 	}
 }
 
-remainingTimeBox.innerHTML = `${+process.remainingTime}s`
+// Setting Default remaining Time in remainingTimeBlock;
+remainingTimeBox.innerHTML = process.remainingTime;
 
-function notification(content, color = 'green', textcolor = 'white', classes = `p-3 rounded pl-8 pr-8 font-bold shadow-xl`) {
+function notification(content, color = 'green', textcolor = 'white') {
 	let newNote = document.createElement('div');
-	newNote.className= classes + ` bg-${color}-700 text-${textcolor}`;
+	newNote.className = `p-3 rounded pl-8 pr-8 font-bold shadow-xl bg-${color}-700 text-${textcolor}`;
 	newNote.innerHTML = content;
 	if (!notes.childNodes[1]) {
 		notes.innerHTML+="<h1 class='text-center font-bold text-xl'>Notifications</h1>"
@@ -121,10 +124,10 @@ function notification(content, color = 'green', textcolor = 'white', classes = `
 		if (!notes.childNodes[1]) {
 			notes.innerHTML='';
 		}
-	}, 3000)
+	}, 5000)
 	return newNote;
 }
 
+// Handling Global Event Listener
 runBtn.addEventListener('click', process.runProcess);
-
 addBtn.addEventListener('click', process.addProcess);
