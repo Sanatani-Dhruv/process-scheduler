@@ -6,6 +6,7 @@ let durationInput = document.getElementById('durationInput');
 let notes = document.getElementById('notifications');
 let processAddBlock = document.getElementById('processAddBlock');
 let remainingTimeBox = document.getElementById('remainingTimeBox');
+let passTimeBox = document.getElementById('passTimeBox');
 let colorArr = ['blue', 'red', 'green', 'pink', 'orange'];
 let currColor = 0;
 let processBlock = document.getElementById('processBlock');
@@ -28,12 +29,17 @@ class process {
 		this.burstTime;
 		this.calcArrivalTime();
 		process.processArray.push(this);
+		console.log(process.processArray);
 	}
 
 	static addProcess() {
 		if (nameInput.value.trim() != '' && durationInput.value.trim() != '') {
 			let name = nameInput.value;
 			let duration = +durationInput.value;
+			if (duration < 1) {
+				notification('Duration Should be Greater than 1', 'red');
+				return false;
+			}
 			let newProcess = new process(name, duration);
 			nameInput.value = '';
 			durationInput.value = '';
@@ -68,36 +74,60 @@ class process {
 		let arrivalTime = console.log(`Arrival Time of ${this.id}: ${process.totalTime}s`);
 	}
 
+	static handleStoppedRunning() {
+		console.log('No Process in Queue!!');
+		runBtn.disabled = false; // Enable till Process End
+		runBtn.innerText = 'Run Processes';
+		if (process.remainingTime == 0 && process.totalTime != 0) {
+			notification('Process Completed!!');
+		} else {
+			notification('No Process in Queue!!', 'yellow')
+		}
+	}
+
 	static async runProcess() {
 		process.running = true;
 		let i=0;
 		do {
+			if (process.remainingTime === 0 ) {
+				process.handleStoppedRunning();
+				break;
+			}
+
+			runBtn.innerText = 'Stop Process!!';
+			// runBtn.removeEventListener('click', process.runProcess); // Removing Event Listener
+			// runBtn.addEventListener('click', process.stopProcess); // Add New Event Listener
+			console.log(runBtn);
+			runBtn.disabled = true; // Disable till Process End
+
 			process.running = await process.runProcessInstance()
 				.then(() => {
 					console.log('Process Running!!');
 					return true;
 				})
 				.catch(() => {
-					console.log('Processes Completed!!');
+					process.handleStoppedRunning();
 					return false;
 				});
-
 		} while (process.running);
 	}
 
 	static runProcessInstance() {
 		return new Promise((resolve, reject) => {
-			if (process.remainingTime > 0) {
-				process.remainingTime--;
-				process.totalTime++;
-				process.currentTime++;
-				setTimeout(() => {
+			console.log(process.remainingTime)
+			setTimeout(()=> {
+				if (process.remainingTime > 0) {
+					console.log(process.processArray);
+					process.remainingTime--;
+					process.currentTime++;
+					passTimeBox.innerHTML = ++process.totalTime;
 					remainingTimeBox.innerHTML = `${+process.remainingTime}`;
 					resolve();
-				}, 1000);
-			} else {
-				reject();
-			}
+				} else {
+					process.remainingTime = 0;
+					reject();
+				}
+			}, 1000);
 		});
 	}
 }
@@ -107,7 +137,7 @@ remainingTimeBox.innerHTML = process.remainingTime;
 
 function notification(content, color = 'green', textcolor = 'white') {
 	let newNote = document.createElement('div');
-	newNote.className = `p-3 rounded pl-8 pr-8 font-bold shadow-xl bg-${color}-700 text-${textcolor}`;
+	newNote.className = `p-3 cursor-pointer rounded pl-8 pr-8 font-bold shadow-xl bg-${color}-700 text-${textcolor}`;
 	newNote.innerHTML = content;
 	if (!notes.childNodes[1]) {
 		notes.innerHTML+="<h1 class='text-center font-bold text-xl'>Notifications</h1>"
