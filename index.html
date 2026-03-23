@@ -11,27 +11,14 @@
 				<h1 class="text-5xl font-medium">Process Scheduler</h1>
 			</div>
 			<div class="border p-4 z-50 bg-white rounded">
-				<div id="processBlock" class="flex gap-4">
-					<div class="shadow-xl hover:scale-110 transition-all text-lg p-10 rounded font-medium w-22 h-40 flex flex-col justify-center items-center text-white bg-green-600">
-						<div class="text-lg mb-2">
-							P1
-						</div>
-						<div class="text-sm w-max flex flex-col">
-							<div class="w-max">
-								<span>BT:</span> <span id="bt-1">0</span>s
-							</div>
-							<div class="w-max">
-								<span>AT:</span> <span id="at-1">0</span>s
-							</div>
-						</div>
-					</div>
-				</div>
+				<div id="processBlock" class="flex gap-4"></div>
 				<div class="pt-4 text-center">Current Remaining Time of Process: <span class="font-medium"><span id="remainingTimeBox-2">0</span>s</span></div>
 			</div>
 			<div class="bg-violet-700 p-6 pt-4 rounded fixed left-8 top-8 h-1/4 min-h-max text-white shadow-xl text-lg">
 				<h1 class="text-3xl font-medium pb-2">Statistics</h1>
-				<div class="font-medium">Passed Time: <span class="font-bold"><span id="remainingTimeBox-1">0</span>s</span></div>
-				<div class="font-medium">Remaining Time: <span class="font-bold"><span id="passedTimeBox-1">0</span>s</span></div>
+				<div class="font-medium">Total Burst Time: <span class="font-bold"><span id="totalBurstTimeBox">0</span>s</span></div>
+				<div class="font-medium">Remaining Time: <span class="font-bold"><span id="remainingTimeBox-1">0</span>s</span></div>
+				<div class="font-medium">Passed Time: <span class="font-bold"><span id="passedTimeBox-1">0</span>s</span></div>
 			</div>
 			<div class="bg-green-600 p-6 pt-4 rounded fixed right-8 top-8 h-1/4 min-h-max text-white shadow-xl text-lg">
 				<h1 class="text-3xl font-medium pb-2">Gantt Chart</h1>
@@ -62,4 +49,4 @@
 		<script src="./script.js"></script>
 	</body>
 </html>
-<!-- <div class="shadow-xl hover:scale-110 transition-all text-xl p-10 rounded font-medium w-10 h-40 flex justify-center items-center text-white bg-blue-600 bg-red-600 bg-orange-600 bg-green-600 bg-green-700 bg-yellow-700 bg-red-700 bg-pink-600"></div> -->
+<!-- <div class="text-sm w-max flex flex-col text-lg mb-2 shadow-xl hover:scale-110 transition-all text-lg p-10 rounded font-medium w-22 h-40 flex flex-col justify-center items-center text-white bg-green-600 shadow-xl hover:scale-110 transition-all text-xl p-10 rounded font-medium w-10 h-40 flex justify-center items-center text-white bg-blue-600 bg-red-600 bg-orange-600 bg-green-600 bg-green-700 bg-yellow-700 bg-red-700 bg-pink-600"></div> -->

@@ -10,6 +10,7 @@ let remainingTimeBox_2 = document.getElementById('remainingTimeBox-2');
 let passedTimeBox_1 = document.getElementById('passedTimeBox-1');
 let passedTimeBox_2 = document.getElementById('passedTimeBox-2');
 let burstTimeBox = document.getElementById('burstTimeBox');
+let totalBurstTimeBox = document.getElementById('totalBurstTimeBox');
 let colorArr = ['blue', 'red', 'green', 'pink', 'orange'];
 let currColor = 0;
 let processBlock = document.getElementById('processBlock');
@@ -52,10 +53,11 @@ class process {
 			process.remainingTime += burstTime;
 			remainingTimeBox_1.innerHTML = `${process.remainingTime}`
 			remainingTimeBox_2.innerHTML = remainingTimeBox_1.innerHTML;
+			totalBurstTimeBox.innerHTML = +totalBurstTimeBox.innerHTML + burstTime
 			console.log(`Process Name: ${name}, Burst Time: ${burstTime}`);
 			console.log(`Number of Process: ${process.processCount}`);
 			let noteContent = `New Process Created with Name: ${name}<br>burstTime: ${burstTime}`;
-			process.addProcessBlock(name);
+			process.addProcessBlock(name, newProcess.id, newProcess.burstTime);
 
 			// Creating Notification
 			notification(noteContent)
@@ -65,9 +67,10 @@ class process {
 		}
 	}
 
-	static addProcessBlock(name) {
+	static addProcessBlock(name, id, bt) {
 		// Parent
 		let node = document.createElement('div');
+		node.id = `nodeId-${id}`;
 
 		// Children
 		let nodeChildMain = document.createElement('div');
@@ -92,17 +95,34 @@ class process {
 		let atSpan = document.createElement('span');
 		let btValue = document.createElement('span');
 		let atValue = document.createElement('span');
+
+		// ID Setting 
 		let btId = document.createAttribute('id');
 		let atId = document.createAttribute('id');
+		btId.value = `bt-${id}`;
+		atId.value = `at-${id}`;
+		btValue.setAttributeNode(btId);
+		atValue.setAttributeNode(atId);
 
-		// ID Setting Remaining Note For You
-		btSpan.innerText = "BT:";
-		atSpan.innerText = "AT:";
+		// Labels setting of BT and AT in DOM
+		btSpan.innerText = "BT: ";
+		atSpan.innerText = "AT: ";
 
+		btValue.innerHTML = bt;
+		atValue.innerHTML = process.currentTime;
+
+		// Setting Burst and Arrival Time of Process in DOM
 		nodeChildSub1.appendChild(btSpan);
-		nodeChildSub1.appendChild(atSpan);
+		btSpan.appendChild(btValue);
+		nodeChildSub2.appendChild(atSpan);
+		atSpan.appendChild(atValue);
+
+		// Seconds Label putting
+		btSpan.innerHTML += 's';
+		atSpan.innerHTML += 's';
 
 		nodeChildMain.innerHTML = name;
+		console.log(btValue.innerHTML)
 
 		let processClass = `shadow-xl hover:scale-110 transition-all text-lg p-10 rounded font-medium w-22 h-40 flex flex-col justify-center items-center text-white bg-${colorArr[currColor++]}-600`;
 		if (currColor == 5)
@@ -117,7 +137,7 @@ class process {
 		console.log('No Process in Queue!!');
 		runBtn.disabled = false; // Enable till Process End
 		runBtn.innerText = 'Run Processes';
-		if (process.remainingTime == 0 && process.totalTime != 0) {
+		if (process.remainingTime == 0 && process.currentTime != 0) {
 			notification('Process Completed!!');
 		} else {
 			notification('No Process in Queue!!', 'yellow')
@@ -129,14 +149,19 @@ class process {
 		let i=0;
 		do {
 			if (process.remainingTime === 0 ) {
+				if (process.processArray[0].burstTime == process.currentTime) {
+					console.log(`Process with PID: ${process.processArray[0].id} Completed`);
+					// This is where your code remains
+					// process.processArray[0]
+					delete process.processArray[0];
+				}
 				process.handleStoppedRunning();
 				break;
 			}
 
-			runBtn.innerText = 'Stop Process!!';
+			// runBtn.innerText = 'Stop Process!!';
 			// runBtn.removeEventListener('click', process.runProcess); // Removing Event Listener
 			// runBtn.addEventListener('click', process.stopProcess); // Add New Event Listener
-			console.log(runBtn);
 			runBtn.disabled = true; // Disable till Process End
 
 			process.running = await process.runProcessInstance()
@@ -145,6 +170,9 @@ class process {
 					return true;
 				})
 				.catch(() => {
+					if (process.processArray[0].burstTime == process.currentTime) {
+						console.log(`Process with PID: ${process.processArray[0].id} Completed`);
+					}
 					process.handleStoppedRunning();
 					return false;
 				});
@@ -156,10 +184,9 @@ class process {
 			console.log(process.remainingTime)
 			setTimeout(()=> {
 				if (process.remainingTime > 0) {
-					console.log(process.processArray);
 					process.remainingTime--;
 					process.currentTime++;
-					passedTimeBox_1.innerHTML = ++process.totalTime;
+					passedTimeBox_1.innerHTML = process.currentTime;
 					passedTimeBox_2.innerHTML = passedTimeBox_1.innerHTML;
 					remainingTimeBox_2.innerHTML = `${+process.remainingTime}`;
 					remainingTimeBox_1.innerHTML = `${+process.remainingTime}`;
@@ -182,7 +209,7 @@ function notification(content, color = 'green', textcolor = 'white') {
 	newNote.className = `p-3 cursor-pointer rounded pl-8 pr-8 font-bold shadow-xl bg-${color}-700 text-${textcolor}`;
 	newNote.innerHTML = content;
 	if (!notes.childNodes[1]) {
-		notes.innerHTML+="<h1 class='text-center font-bold text-xl'>Notifications</h1>"
+		notes.innerHTML += "<h1 class='text-center font-bold text-xl'>Notifications</h1>"
 	}
 	newNote.addEventListener('click',(e) => {
 		e.target.remove();
