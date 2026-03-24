@@ -40,16 +40,12 @@ class process {
 		console.log(process.pArray);
 	}
 
-	static sortOnBurstTime() {
-
-	}
-
 	static addProcess() {
 		if (nameInput.value.trim() != '' && burstTimeInput.value.trim() != '') {
 			let name = nameInput.value;
 			let burstTime = +burstTimeInput.value;
 			if (burstTime < 1) {
-				notification('burstTime Should be Greater than or Equal to 1', 'red');
+				notification('Duration Should be Greater than or Equal to 1', 'red');
 				return false;
 			}
 			let newProcess = new process(name, burstTime);
@@ -85,6 +81,10 @@ class process {
 		// Children
 		let nodeChildMain = document.createElement('div');
 		let nodeChildSub = document.createElement('div');
+		let nodeChildStatus = document.createElement('div');
+		nodeChildStatus.id = `nodeStatus-${id}`;
+		nodeChildStatus.className = `absolute -top-10 text-black p-2 pt-1 pb-1 rounded`;
+		// nodeChildStatus.style.top = -10;
 
 		// Child-1 && Child-2 of Sub-Parent-2
 		let nodeChildSub1 = document.createElement('div');
@@ -100,6 +100,7 @@ class process {
 
 		node.appendChild(nodeChildMain);
 		node.appendChild(nodeChildSub);
+		node.appendChild(nodeChildStatus);
 		nodeChildSub.appendChild(nodeChildSub1);
 		nodeChildSub.appendChild(nodeChildSub2);
 		nodeChildSub.appendChild(nodeChildSub3);
@@ -147,7 +148,7 @@ class process {
 		nodeChildMain.innerHTML = name;
 		console.log(btValue.innerHTML)
 
-		let processClass = `shadow-xl hover:scale-110 transition-all text-lg p-10 rounded font-medium w-22 h-40 flex flex-col justify-center items-center text-white bg-${colorArr[currColor++]}-600`;
+		let processClass = `relative shadow-xl hover:scale-110 transition-all text-lg p-10 rounded font-medium w-22 h-40 flex flex-col justify-center items-center text-white bg-${colorArr[currColor++]}-600`;
 		if (currColor == 5)
 			currColor = 0;
 		node.className = processClass;
@@ -157,11 +158,13 @@ class process {
 	}
 
 	static handleStoppedRunning() {
-		console.log('No Process in Queue!!');
 		runBtn.disabled = false; // Enable till Process End
 		runBtn.innerText = 'Run Processes';
 		if (process.remainingTime == 0 && process.currentTime != 0) {
 			notification('Process Completed!!');
+			for (let i = 0; i < process.pArray.length;i++) {
+				document.getElementById(`nodeStatus-${i+1}`).innerHTML = `<div class='text-md'>Completed</div>`;
+			}
 		} else {
 			notification('No Process in Queue!!', 'yellow')
 		}
@@ -207,8 +210,13 @@ class process {
 					process.currentIndex++;
 					process.finishedBurstTime += currentProcess.burstTime;
 				}
+
 				if (previousProcessNode && previousProcessNode.innerHTML) {
-					previousProcessNode.innerHTML = "Completed";
+					let statusText;
+					statusText = document.getElementById(`nodeStatus-${process.currentIndex}`);
+					console.log(statusText);
+					statusText.innerHTML = "Completed";
+					statusText.style.display = 'block';
 					console.log(previousProcessNode.childNodes[0]);
 				}
 
@@ -232,8 +240,6 @@ class process {
 					remainingTimeBox_1.innerHTML = `${+process.remainingTime}`;
 					resolve();
 				} else {
-					process.remainingTime = 0;
-					previousProcessNode.innerHTML = "Completed";
 					reject();
 				}
 			}, 1000);

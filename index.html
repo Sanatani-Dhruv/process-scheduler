@@ -6,47 +6,47 @@
 		<link rel="stylesheet" href="./build/output.css">
 	</head>
 	<body class="transition-all">
-		<main class="flex justify-center items-center flex-col p-8">
+		<main class="flex gap-4 justify-center items-center flex-col p-4 md:p-8">
 			<div class="pb-10">
-				<h1 class="text-5xl font-medium">Process Scheduler</h1>
+				<h1 class="md:text-5xl text-3xl font-medium">Process Scheduler</h1>
 			</div>
 			<div class="border p-4 z-50 bg-white rounded">
 				<div id="processBlock" class="flex gap-4"></div>
 				<div class="pt-4 text-center">Current Remaining Time of Process: <span class="font-medium"><span id="remainingTimeBox-2">0</span>s</span></div>
 			</div>
-			<div class="bg-violet-700 p-6 pt-4 rounded fixed left-8 top-8 h-1/4 min-h-max text-white shadow-xl text-lg">
-				<h1 class="text-3xl font-medium pb-2">Statistics</h1>
+			<div class="md:fixed right-15 bottom-10">
+				<div>Time Passed: <span class="font-medium"><span id='passedTimeBox-2'>0</span>s</span></div>
+				<button id="runBtn" class="bg-blue-400 p-1 pl-3 pr-3 mt-2 rounded text-white cursor-pointer font-bold hover:scale-105 hover:bg-blue-600 transition-all">Run Processes</button>
+			</div>
+			<div id="processAddBlock" class="border flex md:fixed md:bottom-8 md:w-196 w-max p-2 md:p-4 md:right-1/4 md:left-1/4 flex-col">
+				<h1 class="text-2xl w-full text-center pb-4">Process Controller</h1>
+				<div class="flex w-full flex-col md:flex-row gap-4 justify-evenly">
+					<label class="w-max md:w-full flex flex-col">
+						<span>Enter Process Name</span>
+						<input id="nameInput" placeholder="Enter new process name" class="p-1 border w-full rounded" type="text" value="P1">
+					</label>
+					<label class="w-max md:w-full flex flex-col">
+						<span>Enter Process Duration</span>
+						<input id="burstTimeInput" placeholder="Enter new Duration" class="p-1 border w-full rounded" max="300" type="number" value="3">
+					</label>
+				</div>
+				<button class="bg-blue-400 p-1 pl-3 pr-3 mt-2 rounded text-white cursor-pointer font-bold hover:scale-101 hover:bg-blue-600 transition-all" id="addProcessBtn">Add</button>
+			</div>
+			<div class="bg-violet-700 w-full text-center md:w-max p-2 md:p-6 pt-4 rounded md:fixed left-8 top-8 md:h-80 md:h-1/4 min-h-max text-white shadow-xl text-lg">
+				<h1 class="md:text-3xl text-2xl font-medium pb-2">Statistics</h1>
 				<div class="font-medium">Total Burst Time: <span class="font-bold"><span id="totalBurstTimeBox">0</span>s</span></div>
 				<div class="font-medium">Remaining Time: <span class="font-bold"><span id="remainingTimeBox-1">0</span>s</span></div>
 				<div class="font-medium">Passed Time: <span class="font-bold"><span id="passedTimeBox-1">0</span>s</span></div>
-				<div class="font-medium">Current Process: <span class="font-bold"><span id="currentProcessBox"></span></span></div>
+				<div class="font-medium">Current Process: <span class="font-bold"><span id="currentProcessBox">NULL</span></span></div>
 				<div class="font-medium">Avg Waiting Time: <span class="font-bold"><span id="avgWaitingTimeBox">0</span>s</span></div>
 			</div>
-			<div class="bg-green-600 p-6 pt-4 rounded fixed right-8 top-8 h-1/4 min-h-max text-white shadow-xl text-lg">
+			<div class="bg-green-600 p-6 pt-4 rounded md:fixed right-8 top-8 h-1/4 min-h-max text-white shadow-xl text-lg">
 				<h1 class="text-3xl font-medium pb-2">Gantt Chart</h1>
 				<ul class="list-disc pl-4">
 					<!-- This will Contain Gannt Chart -->
 				</ul>
 			</div>
-			<div id="processAddBlock" class="border fixed bottom-8 p-4 right-1/4 left-1/4 flex flex-col">
-				<h1 class="text-2xl w-full text-center pb-4">Process Controller</h1>
-				<div class="flex flex-row gap-4 justify-evenly">
-					<label class="w-min flex flex-col">
-						<span>Enter Process Name</span>
-						<input id="nameInput" placeholder="Enter new process name" class="p-1 border rounded" type="text" value="P1">
-					</label>
-					<label class="w-min flex flex-col">
-						<span>Enter Process Duration</span>
-						<input id="burstTimeInput" placeholder="Enter new Duration" class="p-1 border rounded" max="300" type="number" value="3">
-					</label>
-				</div>
-				<button class="bg-blue-400 p-1 pl-3 pr-3 mt-2 rounded text-white cursor-pointer font-bold hover:scale-101 hover:bg-blue-600 transition-all" id="addProcessBtn">Add</button>
-			</div>
-			<div class="fixed right-15 bottom-10">
-				<div>Time Passed: <span class="font-medium"><span id='passedTimeBox-2'>0</span>s</span></div>
-				<button id="runBtn" class="bg-blue-400 p-1 pl-3 pr-3 mt-2 rounded text-white cursor-pointer font-bold hover:scale-105 hover:bg-blue-600 transition-all">Run Processes</button>
-			</div>
-			<div id="notifications" class="transition-all fixed left-0 bottom-0 p-6 flex flex-col gap-4"></div>
+			<div id="notifications" class="transition-all md:bg-transparent bg-gray-100/50 fixed left-0 md:bottom-0 p-6 flex flex-col gap-4"></div>
 		</main>
 		<script src="./script.js"></script>
 	</body>
