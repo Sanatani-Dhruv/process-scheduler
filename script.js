@@ -11,6 +11,7 @@ let passedTimeBox_1 = document.getElementById('passedTimeBox-1');
 let passedTimeBox_2 = document.getElementById('passedTimeBox-2');
 let burstTimeBox = document.getElementById('burstTimeBox');
 let totalBurstTimeBox = document.getElementById('totalBurstTimeBox');
+let currentProcessBox = document.getElementById('currentProcessBox');
 let colorArr = ['blue', 'red', 'green', 'pink', 'orange'];
 let currColor = 0;
 let processBlock = document.getElementById('processBlock');
@@ -20,19 +21,23 @@ class process {
 	static currentTime = 0;
 	static totalTime = 0;
 	static remainingTime = 0;
+	static totalBurstTime = 0;
+	static finishedBurstTime = 0;
 	static running  = false;
-	static processArray = [];
+	static pArray = [];
 	static processCount = 0;
+	static currentIndex = 0;
 	constructor(processName, burstTime = 5) {
 		this.processName = processName;
 		this.id = ++process.processCount;
 		this.burstTime = burstTime;
+		this.waitingTime = 0;
 		console.log(`New Process Created with ID: ${this.id}`);
 		// console.log(`Name: ${this.processName}, ID: ${this.id}, burstTime: ${this.burstTime}sec`);
 		this.arrivalTime = process.currentTime;
 		this.burstTime;
-		process.processArray.push(this);
-		console.log(process.processArray);
+		process.pArray.push(this);
+		console.log(process.pArray);
 	}
 
 	static sortOnBurstTime() {
@@ -44,16 +49,21 @@ class process {
 			let name = nameInput.value;
 			let burstTime = +burstTimeInput.value;
 			if (burstTime < 1) {
-				notification('burstTime Should be Greater than 1', 'red');
+				notification('burstTime Should be Greater than or Equal to 1', 'red');
 				return false;
 			}
 			let newProcess = new process(name, burstTime);
 			nameInput.value = '';
 			burstTimeInput.value = '';
 			process.remainingTime += burstTime;
+			process.totalBurstTime += burstTime;
+
 			remainingTimeBox_1.innerHTML = `${process.remainingTime}`
 			remainingTimeBox_2.innerHTML = remainingTimeBox_1.innerHTML;
-			totalBurstTimeBox.innerHTML = +totalBurstTimeBox.innerHTML + burstTime
+			totalBurstTimeBox.innerHTML = process.totalBurstTime;
+			if (currentProcessBox.innerHTML === '')
+				currentProcessBox.innerHTML = process.pArray[0].processName;
+
 			console.log(`Process Name: ${name}, Burst Time: ${burstTime}`);
 			console.log(`Number of Process: ${process.processCount}`);
 			let noteContent = `New Process Created with Name: ${name}<br>burstTime: ${burstTime}`;
@@ -79,47 +89,60 @@ class process {
 		// Child-1 && Child-2 of Sub-Parent-2
 		let nodeChildSub1 = document.createElement('div');
 		let nodeChildSub2 = document.createElement('div');
+		let nodeChildSub3 = document.createElement('div');
 
 		// Setting Class Names
 		nodeChildMain.className = `text-lg mb-2`;
 		nodeChildSub.className = `text-sm w-max flex flex-col`;
 		nodeChildSub1.className = `w-max`;
 		nodeChildSub2.className = `w-max`;
+		nodeChildSub3.className = `w-max`;
 
 		node.appendChild(nodeChildMain);
 		node.appendChild(nodeChildSub);
 		nodeChildSub.appendChild(nodeChildSub1);
 		nodeChildSub.appendChild(nodeChildSub2);
+		nodeChildSub.appendChild(nodeChildSub3);
 
 		let btSpan = document.createElement('span');
 		let atSpan = document.createElement('span');
+		let wtSpan = document.createElement('span');
 		let btValue = document.createElement('span');
 		let atValue = document.createElement('span');
+		let wtValue = document.createElement('span');
 
 		// ID Setting 
 		let btId = document.createAttribute('id');
 		let atId = document.createAttribute('id');
+		let wtId = document.createAttribute('id');
 		btId.value = `bt-${id}`;
 		atId.value = `at-${id}`;
+		wtId.value = `wt-${id}`;
 		btValue.setAttributeNode(btId);
 		atValue.setAttributeNode(atId);
+		wtValue.setAttributeNode(wtId);
 
 		// Labels setting of BT and AT in DOM
 		btSpan.innerText = "BT: ";
 		atSpan.innerText = "AT: ";
+		wtSpan.innerText = "WT: ";
 
 		btValue.innerHTML = bt;
 		atValue.innerHTML = process.currentTime;
+		wtValue.innerHTML = '0';
 
 		// Setting Burst and Arrival Time of Process in DOM
 		nodeChildSub1.appendChild(btSpan);
 		btSpan.appendChild(btValue);
 		nodeChildSub2.appendChild(atSpan);
 		atSpan.appendChild(atValue);
+		nodeChildSub3.appendChild(wtSpan);
+		wtSpan.appendChild(wtValue);
 
 		// Seconds Label putting
 		btSpan.innerHTML += 's';
 		atSpan.innerHTML += 's';
+		wtSpan.innerHTML += 's';
 
 		nodeChildMain.innerHTML = name;
 		console.log(btValue.innerHTML)
@@ -149,12 +172,6 @@ class process {
 		let i=0;
 		do {
 			if (process.remainingTime === 0 ) {
-				if (process.processArray[0].burstTime == process.currentTime) {
-					console.log(`Process with PID: ${process.processArray[0].id} Completed`);
-					// This is where your code remains
-					// process.processArray[0]
-					delete process.processArray[0];
-				}
 				process.handleStoppedRunning();
 				break;
 			}
@@ -170,9 +187,6 @@ class process {
 					return true;
 				})
 				.catch(() => {
-					if (process.processArray[0].burstTime == process.currentTime) {
-						console.log(`Process with PID: ${process.processArray[0].id} Completed`);
-					}
 					process.handleStoppedRunning();
 					return false;
 				});
@@ -183,7 +197,33 @@ class process {
 		return new Promise((resolve, reject) => {
 			console.log(process.remainingTime)
 			setTimeout(()=> {
+				let currentProcess = process.pArray[process.currentIndex];
+				let previousProcess = process.pArray[process.currentIndex - 1];
+				let previousProcessNode = document.getElementById(`nodeId-${process.currentIndex}`);
+				currentProcessBox.innerHTML = currentProcess.processName;
+				if (currentProcess && (process.finishedBurstTime + currentProcess.burstTime) === process.currentTime) {
+					console.log(`Process with PID: ${process.pArray[process.currentIndex].id} Completed`);
+					notification(`Process with PID: ${process.pArray[process.currentIndex].id} Completed`);
+					process.currentIndex++;
+					process.finishedBurstTime += currentProcess.burstTime;
+				}
+				if (previousProcessNode && previousProcessNode.innerHTML) {
+					previousProcessNode.innerHTML = "Completed";
+					console.log(previousProcessNode.childNodes[0]);
+				}
+
+				console.log(process.finishedBurstTime + currentProcess.burstTime);
+				for (let i = process.currentIndex; i < process.pArray.length;i++) {
+					if (process.pArray[i] !== currentProcess) {
+						console.log(document.getElementById(`wt-${i+1}`));
+						document.getElementById(`wt-${i+1}`).innerHTML = process.pArray[i].waitingTime;
+						console.log(`WT[${process.pArray[i].processName}]: ${process.pArray[i].waitingTime}`);
+						process.pArray[i].waitingTime++;
+					}
+				}
+
 				if (process.remainingTime > 0) {
+					console.log(`Finished BT: ${process.finishedBurstTime}`);
 					process.remainingTime--;
 					process.currentTime++;
 					passedTimeBox_1.innerHTML = process.currentTime;
@@ -193,6 +233,7 @@ class process {
 					resolve();
 				} else {
 					process.remainingTime = 0;
+					previousProcessNode.innerHTML = "Completed";
 					reject();
 				}
 			}, 1000);

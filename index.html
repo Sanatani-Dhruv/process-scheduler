@@ -19,6 +19,8 @@
 				<div class="font-medium">Total Burst Time: <span class="font-bold"><span id="totalBurstTimeBox">0</span>s</span></div>
 				<div class="font-medium">Remaining Time: <span class="font-bold"><span id="remainingTimeBox-1">0</span>s</span></div>
 				<div class="font-medium">Passed Time: <span class="font-bold"><span id="passedTimeBox-1">0</span>s</span></div>
+				<div class="font-medium">Current Process: <span class="font-bold"><span id="currentProcessBox"></span></span></div>
+				<div class="font-medium">Avg Waiting Time: <span class="font-bold"><span id="avgWaitingTimeBox">0</span>s</span></div>
 			</div>
 			<div class="bg-green-600 p-6 pt-4 rounded fixed right-8 top-8 h-1/4 min-h-max text-white shadow-xl text-lg">
 				<h1 class="text-3xl font-medium pb-2">Gantt Chart</h1>
@@ -35,7 +37,7 @@
 					</label>
 					<label class="w-min flex flex-col">
 						<span>Enter Process Duration</span>
-						<input id="burstTimeInput" placeholder="Enter new Duration" class="p-1 border rounded" max="300" type="number" value="12">
+						<input id="burstTimeInput" placeholder="Enter new Duration" class="p-1 border rounded" max="300" type="number" value="3">
 					</label>
 				</div>
 				<button class="bg-blue-400 p-1 pl-3 pr-3 mt-2 rounded text-white cursor-pointer font-bold hover:scale-101 hover:bg-blue-600 transition-all" id="addProcessBtn">Add</button>
