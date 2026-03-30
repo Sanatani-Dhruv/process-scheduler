@@ -10,6 +10,7 @@ let remainingTimeBox_2 = document.getElementById('remainingTimeBox-2');
 let passedTimeBox_1 = document.getElementById('passedTimeBox-1');
 let passedTimeBox_2 = document.getElementById('passedTimeBox-2');
 let burstTimeBox = document.getElementById('burstTimeBox');
+let avgBurstTimeBox = document.getElementById('avgBurstTimeBox');
 let totalBurstTimeBox = document.getElementById('totalBurstTimeBox');
 let currentProcessBox = document.getElementById('currentProcessBox');
 let colorArr = ['blue', 'red', 'green', 'pink', 'orange'];
@@ -22,6 +23,7 @@ class process {
 	static totalTime = 0;
 	static remainingTime = 0;
 	static totalBurstTime = 0;
+	static avgBurstTime = 0;
 	static finishedBurstTime = 0;
 	static running  = false;
 	static pArray = [];
@@ -53,10 +55,13 @@ class process {
 			burstTimeInput.value = '';
 			process.remainingTime += burstTime;
 			process.totalBurstTime += burstTime;
+			process.avgBurstTime = (process.totalBurstTime / process.pArray.length);
 
 			remainingTimeBox_1.innerHTML = `${process.remainingTime}`
 			remainingTimeBox_2.innerHTML = remainingTimeBox_1.innerHTML;
 			totalBurstTimeBox.innerHTML = process.totalBurstTime;
+			avgBurstTimeBox.innerHTML = process.avgBurstTime;
+
 			if (currentProcessBox.innerHTML === '')
 				currentProcessBox.innerHTML = process.pArray[0].processName;
 
