@@ -10,6 +10,7 @@ let remainingTimeBox_2 = document.getElementById('remainingTimeBox-2');
 let passedTimeBox_1 = document.getElementById('passedTimeBox-1');
 let passedTimeBox_2 = document.getElementById('passedTimeBox-2');
 let burstTimeBox = document.getElementById('burstTimeBox');
+let ganntBox = document.getElementById('ganntBox');
 let avgBurstTimeBox = document.getElementById('avgBurstTimeBox');
 let totalBurstTimeBox = document.getElementById('totalBurstTimeBox');
 let currentProcessBox = document.getElementById('currentProcessBox');
@@ -75,6 +76,36 @@ class process {
 		} else {
 			let noteContent = 'Fill Input Fields with proper Values';
 			notification(noteContent, 'red')
+		}
+	}
+
+	static generateGanntChartInstance(pArr) {
+		let arr = pArr;
+		for (let i=0; i < arr.length;i++) {
+			let pr = arr[i];
+			// if (i == 0) {
+			let block = document.createElement('div');
+			block.className = `border-r border-l w-max p-2 relative`;
+			block.innerHTML = `${pr.processName}`;
+			let child = document.createElement('div');
+			child.className = `absolute -left-2.5 -bottom-6`;
+			if (i == 0) {
+				child.innerHTML = `${pr.arrivalTime}s`;
+			} else {
+				for (let j = 0;j < i;j++) {
+					console.log(`Burst Time: ${arr[j]}`);
+					child.innerHTML = +child.innerHTML+ arr[j].burstTime;
+				}
+				child.innerHTML += 's';
+			}
+
+			if (i == arr.length) {
+				child.innerHTML 
+			}
+			block.appendChild(child);
+			console.log(block);
+			ganntBox.appendChild(block);
+			// }
 		}
 	}
 
@@ -167,6 +198,8 @@ class process {
 		runBtn.innerText = 'Run Processes';
 		if (process.remainingTime == 0 && process.currentTime != 0) {
 			notification('Process Completed!!');
+			ganntBox.innerHTML = '';
+			process.generateGanntChartInstance(process.pArray);
 			for (let i = 0; i < process.pArray.length;i++) {
 				document.getElementById(`nodeStatus-${i+1}`).innerHTML = `<div class='text-md'>Completed</div>`;
 			}
